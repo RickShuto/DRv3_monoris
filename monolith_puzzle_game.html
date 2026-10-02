@@ -145,13 +145,13 @@
         let log = [];
 
         // Helper: Custom message box instead of alert()
-        function showMessage(title, text) {
+        window.showMessage = function(title, text) {
             document.getElementById('message-title').innerText = title;
             document.getElementById('message-text').innerText = text;
             document.getElementById('message-modal').classList.remove('hidden');
         }
 
-        function closeMessage() {
+        window.closeMessage = function() {
             document.getElementById('message-modal').classList.add('hidden');
         }
 
@@ -168,12 +168,12 @@
             return board;
         }
 
-        function startGameRandom() {
+        window.startGameRandom = function() {
             initialBoard = generateRandomBoard();
             initGame(initialBoard);
         }
 
-        function showCustomInput() {
+        window.showCustomInput = function() {
             const panel = document.getElementById('custom-input-panel');
             panel.classList.toggle('hidden');
             
@@ -191,7 +191,7 @@
             }
         }
 
-        function startGameCustom() {
+        window.startGameCustom = function() {
             const textVal = document.getElementById('custom-board-text').value.trim();
             const lines = textVal.split('\n').map(l => l.trim()).filter(l => l.length > 0);
             const errDiv = document.getElementById('input-error');
@@ -214,7 +214,7 @@
                     let char = lines[i][j];
                     if (!['1','2','3','4'].includes(char)) {
                         errDiv.innerText = `エラー: ${i+1}行目 ${j+1}文字目に 1〜4 以外の文字が含まれています (${char})`;
-                        errDiv.classList.remove('hidden');
+                        errDiv.classList.add('hidden');
                         return;
                     }
                     row.push(parseInt(char));
@@ -237,7 +237,7 @@
             renderBoard();
         }
 
-        function returnToMenu() {
+        window.returnToMenu = function() {
             document.getElementById('game-screen').classList.add('hidden');
             document.getElementById('startup-screen').classList.remove('hidden');
         }
@@ -319,7 +319,7 @@
         }
 
         // Cell Click Handler
-        function onCellClick(y, x) {
+        window.onCellClick = function(y, x) {
             let group = findGroup(currentBoard, y, x);
             if (group.length < 2) return; // Need at least 2 connected cells to clear
 
@@ -373,7 +373,7 @@
             renderBoard();
         }
 
-        function undoMove() {
+        window.undoMove = function() {
             if (history.length > 0) {
                 currentBoard = history.pop();
                 log.pop();
@@ -381,14 +381,14 @@
             }
         }
 
-        function resetBoard() {
+        window.resetBoard = function() {
             currentBoard = JSON.parse(JSON.stringify(initialBoard));
             history = [];
             log = [];
             renderBoard();
         }
 
-        function toggleLogModal() {
+        window.toggleLogModal = function() {
             const modal = document.getElementById('log-modal');
             modal.classList.toggle('hidden');
 
@@ -402,7 +402,7 @@
                     log.forEach((entry, idx) => {
                         let coordsStr = entry.map(([y, x]) => `${alphabets[y]}${x+1}`).join(', ');
                         html += `<div class="p-2 bg-slate-900/60 rounded border border-slate-700/50">
-                            <span class="text-teal-400 font-bold">#${idx + 1}</span> (${entry.2 || entry.length}個消去): <span class="text-slate-400">${coordsStr}</span>
+                            <span class="text-teal-400 font-bold">#${idx + 1}</span> (${entry.length}個消去): <span class="text-slate-400">${coordsStr}</span>
                         </div>`;
                     });
                     content.innerHTML = html;
